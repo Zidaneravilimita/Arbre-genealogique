@@ -1,7 +1,9 @@
+from api import DatabaseManager
 import customtkinter
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
+import subprocess
 import os
 
 class ArbreGenealogique(customtkinter.CTk):
@@ -30,29 +32,31 @@ class ArbreGenealogique(customtkinter.CTk):
         self.canvas = tk.Canvas(self, bg="white")
         self.canvas.grid(row=1, column=0, sticky="nsew")
 
-        # Données de l'arbre généalogique
+        # Données de l'arbre généalogique avec âges ajoutés
         self.donnees = {
             "Grand-parents": [
-                {"nom": "Mariette", "infos": "Mère de Mana", "avatar": "avatar_mere.png"},
-                {"nom": "Motherland", "infos": "Père de Mana", "avatar": "avatar_homme.png"}
+                {"nom": "Mariette", "age": 78, "infos": "Mère de Mana, 78 ans", "avatar": "avatar_mere.png"},
+                {"nom": "Motherland", "age": 80, "infos": "Père de Mana, 80 ans", "avatar": "avatar_homme.png"}
             ],
             "Parents": [
-                {"nom": "Mana Thomas", "infos": "Père de Zidane et Juana", "avatar": "avatar_homme.png"},
-                {"nom": "Sidonie", "infos": "Mère de Zidane et Juana", "avatar": "avatar_mere.png"},
-                {"nom": "Felana", "infos": "Mère de Echa et Iliman", "avatar": "avatar_mere_2.png"},
-                {"nom": "Tambou", "infos": "Père de Echa et Iliman", "avatar": "avatar_homme.png"},
-                {"nom": "Niry", "infos": "Mère de Dinot et Cheria", "avatar": "avatar_mere.png"},
-                {"nom": "Parally", "infos": "Père de Dinot et Cheria", "avatar": "avatar_homme.png"}
+                {"nom": "Mana Thomas", "age": 52, "infos": "Père de Zidane et Juana, 52 ans", "avatar": "avatar_homme.png"},
+                {"nom": "Sidonie", "age": 48, "infos": "Mère de Zidane et Juana, 48 ans", "avatar": "avatar_mere.png"},
+                {"nom": "Felana", "age": 45, "infos": "Mère de Echa et Iliman, 45 ans", "avatar": "avatar_mere_2.png"},
+                {"nom": "Tambou", "age": 47, "infos": "Père de Echa et Iliman, 47 ans", "avatar": "avatar_homme.png"},
+                {"nom": "Niry", "age": 50, "infos": "Mère de Dinot et Cheria, 50 ans", "avatar": "avatar_mere.png"},
+                {"nom": "Parally", "age": 53, "infos": "Père de Dinot et Cheria, 53 ans", "avatar": "avatar_homme.png"}
             ],
             "Enfants": [
-                {"nom": "Juana", "infos": "Fille de Mana et Sidonie", "avatar": "avatar_fille_2.png"},
-                {"nom": "Zidane", "infos": "Fils de Mana et Sidonie", "avatar": "avatar_boy.png"},
-                {"nom": "Iliman", "infos": "Fils de Felana et Tambou", "avatar": "avatar_boy.png"},
-                {"nom": "Echa", "infos": "Fille de Felana et Tambou", "avatar": "avatar_fille_2.png"},
-                {"nom": "Dinot", "infos": "Fils de Niry et Parally", "avatar": "avatar_boy.png"},
-                {"nom": "Cheria", "infos": "Fille de Niry et Parally", "avatar": "avatar_fille_1.png"}
+                {"nom": "Juana", "age": 18, "infos": "Fille de Mana et Sidonie, 22 ans", "avatar": "avatar_fille_2.png"},
+                {"nom": "Zidane", "age": 22, "infos": "Fils de Mana et Sidonie, 24 ans", "avatar": "avatar_boy.png"},
+                {"nom": "Iliman", "age": 6, "infos": "Fils de Felana et Tambou, 18 ans", "avatar": "avatar_boy.png"},
+                {"nom": "Echa", "age": 12, "infos": "Fille de Felana et Tambou, 20 ans", "avatar": "avatar_fille_2.png"},
+                {"nom": "Dinot", "age": 18, "infos": "Fils de Niry et Parally, 25 ans", "avatar": "avatar_boy.png"},
+                {"nom": "Cheria", "age": 21, "infos": "Fille de Niry et Parally, 21 ans", "avatar": "avatar_fille_1.png"}
             ]
         }
+
+
 
         self.images = {}  # Stocker les images d'avatar
         self.dessiner_arbre()
@@ -86,15 +90,36 @@ class ArbreGenealogique(customtkinter.CTk):
         if image:
             self.images[personne["nom"]] = image
             self.canvas.create_image(x + 40, y, image=image)
-            self.canvas.create_text(x + 40, y + 50, text=personne["nom"])
+            self.canvas.create_text(x + 40, y + 50, text=f"{personne['nom']} ({personne['age']} ans)")
             
             bouton = customtkinter.CTkButton(self.canvas, text="Infos", width=60, command=lambda p=personne: self.afficher_infos(p))
-            self.canvas.create_window(x + 40, y + 80, window=bouton)
+            self.canvas.create_window(x + 5, y + 80, window=bouton)
+            
+            #boutton de plus d'infos
+            bouton2 = customtkinter.CTkButton(self.canvas, text="Plus d'Infos", width=60, fg_color="gray", command=lambda p=personne: self.afficher_infos_2(p))
+            self.canvas.create_window(x + 80, y + 80, window=bouton2)
+            
+            
+            def recuperer_donnees_bdd(self):
+                resultats = self.db.recuperer_donnees()
+                donnees_par_generation = {"Grand-parents": [], "Parents": [], "Enfants": []}
+
+                for personne in resultats:
+                    generation = personne.get("generation")  # Assure-toi que ta table contient cette colonne
+                    if generation in donnees_par_generation:
+                        donnees_par_generation[generation].append({
+                            "nom": personne.get("nom"),
+                            "age": personne.get("age"),
+                            "infos": personne.get("infos"),
+                            "avatar": personne.get("avatar")
+                        })
+                return donnees_par_generation
+
 
     def dessiner_lignes(self):
         lignes = [
-            (670, 180, 670, 250),  # Ligne Grand-parents -> Parents
-            (620, 180, 700, 180),
+            (670, 180, 670, 250),  
+            (600, 180, 740, 180),
             (290, 250, 1040, 250),
             (290, 250, 290, 270),
             (590, 250, 590, 270),
@@ -118,6 +143,14 @@ class ArbreGenealogique(customtkinter.CTk):
     def afficher_infos(self, personne):
         messagebox.showinfo(personne["nom"], personne["infos"])
 
+
+    def afficher_infos_2(self, personne):
+        subprocess.run(["python", "infos_plus.py"])
+        
+        #if personne == ["Grand-parents"]:
+           #  subprocess.run(["python", "infos_plus_GP.py"])
+      
+         
     def rechercher_personne(self):
         nom_recherche = self.search_entry.get().strip().lower()
         if not nom_recherche:
@@ -131,7 +164,7 @@ class ArbreGenealogique(customtkinter.CTk):
                     return
 
         messagebox.showinfo("Résultat", "Personne non trouvée.")
-
+ 
 if __name__ == "__main__":
     app = ArbreGenealogique()
     app.mainloop()

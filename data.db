@@ -1,9 +1,0 @@
-CREATE DATABASE arbre_genealogique;
-
-CREATE TABLE personnes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nom VARCHAR(255),
-    infos TEXT,
-    avatar VARCHAR(255),
-    generation VARCHAR(255)
-)
