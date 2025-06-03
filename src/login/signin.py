@@ -6,7 +6,6 @@ import subprocess
 import os
 
 
- # Initialisation des thèmes graphique GUI
 set_appearance_mode("light")
 set_default_color_theme("blue")
 root = CTk()
@@ -29,7 +28,7 @@ def verifier_identifiants():
             host = "localhost",
             user = "root",  
             password = "",  
-            database = "utilisateurs"
+            database = "arbre_g"
         )
         cursor = conn.cursor()
         query = "SELECT * FROM users WHERE nom=%s AND prenom=%s AND mot_de_passe=%s"

@@ -28,7 +28,7 @@ def inscrire_utilisateur():
             host="localhost",
             user="root",
             password="",
-            database="utilisateurs"
+            database="arbre_g"
         )
         cursor = conn.cursor()
 

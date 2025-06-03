@@ -1,10 +1,10 @@
-import customtkinter
-import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
-import os
-import subprocess
 from api import DatabaseManager
+import tkinter as tk
+import customtkinter
+import subprocess
+import os
 
 class ArbreGenealogique(customtkinter.CTk):
     def __init__(self):
@@ -78,17 +78,33 @@ class ArbreGenealogique(customtkinter.CTk):
             self.canvas.create_image(x + 40, y, image=image)
             self.canvas.create_text(x + 40, y + 50, text=f"{personne['nom']} ({personne['age']} ans)")
             
-            bouton1 = customtkinter.CTkButton(self.canvas, text="Infos", width=60, command=lambda p=personne: self.afficher_infos(p))
+            bouton1 = customtkinter.CTkButton(self.canvas,
+                                              fg_color="MediumTurquoise",
+                                              text="Infos",
+                                              width=60,
+                                              command=lambda p=personne: self.afficher_infos(p))
             self.canvas.create_window(x + 5, y + 80, window=bouton1)
             
-            bouton2 = customtkinter.CTkButton(self.canvas, text="Plus d'infos", width=80, fg_color="gray", command=lambda p=personne, g=generation: self.afficher_infos_2(p, g))
+            bouton2 = customtkinter.CTkButton(
+                self.canvas,
+                text="Plus d'infos",
+                width=80,
+                fg_color="gray",
+                command=lambda p=personne, g=generation: self.afficher_infos_2(p, g)
+            )
             self.canvas.create_window(x + 85, y + 80, window=bouton2)
 
     def afficher_infos(self, personne):
         messagebox.showinfo(personne["nom"], personne["infos"])
 
     def afficher_infos_2(self, personne, generation):
-        subprocess.run(["python", "infos_plus.py", generation])
+        try:
+            dossier_script = os.path.dirname(os.path.abspath(__file__))
+            chemin_fenetre = os.path.join(dossier_script, "plus_infos_fenetre.py")
+
+            subprocess.Popen(["python", chemin_fenetre, generation, personne["nom"]])
+        except Exception as e:
+            messagebox.showerror("Erreur", f"Impossible d'ouvrir la fenêtre : {e}")
 
     def rechercher_personne(self):
         nom_recherche = self.search_entry.get().strip().lower()
