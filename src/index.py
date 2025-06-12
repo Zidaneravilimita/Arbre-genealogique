@@ -100,6 +100,14 @@ class ArbreGenealogique(customtkinter.CTk):
                 self.canvas.create_line(x1, y, x2, y, fill="red", width=2)
             x += step
 
+        #  Lignes verticales au-dessus des enfants directs des grands-parents
+        enfants_gp = ["Mana Thomas", "Felana", "Parally"]
+        for nom in enfants_gp:
+            if nom in self.positions_par_nom and nom in self.positions_y:
+                x_p = self.positions_par_nom[nom] + 40
+                y_p = self.positions_y[nom]
+                self.canvas.create_line(x_p, y_p - 60, x_p, y_p - 30, fill="blue", width=2)
+
         # Lignes descendantes des grands-parents vers ligne horizontale
         y_parents = coords["Parents"][1]
         y_line_gp = y_parents - 60
@@ -114,7 +122,7 @@ class ArbreGenealogique(customtkinter.CTk):
                 y_gp = self.positions_y[gp_nom] + 90
                 self.canvas.create_line(x_gp, y_gp, x_gp, y_line_gp, fill="blue", width=2)
 
-        # Enfants (grouper par couple de parents)
+        # Enfants
         y_enfant = coords["Enfants"][1]
         deja_affiches = set()
         for nom_p1, nom_p2 in couples:
@@ -140,7 +148,6 @@ class ArbreGenealogique(customtkinter.CTk):
                 x_enfant = start_x + i * coords["Enfants"][2]
                 self.dessiner_personne(enfant, x_enfant, y_enfant, "Enfants")
 
-            # Lien vertical central indiquant même parents
             self.canvas.create_line(x_center + 40, self.positions_y[nom_p1] + 90, x_center + 40, y_enfant, fill="green", width=2)
 
     def dessiner_personne(self, personne, x, y, generation):
