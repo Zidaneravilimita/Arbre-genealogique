@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : jeu. 12 juin 2025 à 21:56
+-- Généré le : ven. 13 juin 2025 à 06:19
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -204,12 +204,12 @@ INSERT INTO `personnes` (`id_personne`, `nom`, `age`, `infos`, `avatar`, `id_per
 (4, 'Sidonie', 48, 'Mère de Zidane et Juana', 'avatar_mere.png', NULL, NULL, 'femme', 3),
 (5, 'Zidane', 22, 'Fils de Mana et Sidonie', 'avatar_boy.png', 3, 4, 'homme', NULL),
 (6, 'Juana', 18, 'Fille de Mana et Sidonie', 'avatar_fille_2.png', 3, 4, 'femme', NULL),
-(7, 'Tambou', 47, 'Père de Echa et Iliman', 'avatar_homme.png', 2, 1, 'homme', 8),
+(7, 'Tambou', 47, 'Père de Echa et Iliman', 'avatar_homme.png', NULL, NULL, 'homme', 8),
 (8, 'Felana', 45, 'Mère de Echa et Iliman', 'avatar_mere_2.png', 2, 1, 'femme', 7),
 (9, 'Echa', 12, 'Fille de Felana et Tambou', 'avatar_fille_2.png', 7, 8, 'femme', NULL),
 (10, 'Iliman', 6, 'Fils de Felana et Tambou', 'avatar_boy.png', 7, 8, 'homme', NULL),
 (11, 'Parally', 53, 'Père de Dinot et Cheria', 'avatar_homme.png', 2, 1, 'homme', 12),
-(12, 'Niry', 50, 'Mère de Dinot et Cheria', 'avatar_mere.png', 2, 1, 'femme', 11),
+(12, 'Niry', 50, 'Mère de Dinot et Cheria', 'avatar_mere.png', NULL, NULL, 'femme', 11),
 (13, 'Dinot', 18, 'Fils de Niry et Parally', 'avatar_boy.png', 11, 12, 'homme', NULL),
 (14, 'Cheria', 21, 'Fille de Niry et Parally', 'avatar_fille_1.png', 11, 12, 'femme', NULL);
 
